@@ -5,47 +5,89 @@
   </picture>
 </p>
 
-# QoL Notch
+<p align="center">
+  <b>Your notch, but useful.</b><br>
+  A free, open-source Dynamic Island for the Mac, built around a teleprompter that follows your voice.
+</p>
 
-A free, open-source Dynamic Island for the Mac notch, built around a teleprompter that follows your voice. "QoL" is short for quality of life: lots of small, useful things, right where you already look.
+<p align="center">
+  <a href="https://github.com/u6610909/QoL-notch/releases/latest"><img src="https://img.shields.io/github/v/release/u6610909/QoL-notch?label=Download&style=for-the-badge&color=0A84FF" alt="Download"></a>
+  <img src="https://img.shields.io/badge/macOS-14%2B-black?style=for-the-badge&logo=apple" alt="macOS 14+">
+  <img src="https://img.shields.io/github/license/u6610909/QoL-notch?style=for-the-badge&color=333" alt="MIT License">
+</p>
 
-## What works so far
+<p align="center">
+  <img src="Branding/social-preview.png" alt="QoL Notch" width="720">
+</p>
 
-- An island that rests inside the notch and grows open when you point at it, with tabs for the prompter, a Home view (music, what's next, weather or system load), now playing, your calendar, a camera mirror, a quick note, a timer, clipboard history and a file shelf with AirDrop.
-- Now playing works with anything that plays on the Mac, including browser tabs in Chrome and Safari: artwork, a progress bar you can drag, previous, play/pause and next. Shuffle and repeat work in Music and Spotify.
-- Small extras: the cover spins as a vinyl record and colours the island's glow, a full-screen now-playing view, an app launcher, a clock widget, a daily line on Home, battery time left, and an optional Touch ID lock for Notes and Clipboard.
-- Make it yours: Black or Glass style, your own accent colour, where the glow comes from, which widgets Home shows, and which six tools sit beside the notch, in your order.
-- Experimental: music controls on the lock screen. Off by default; it uses undocumented parts of macOS that an update could break.
-- Every tab follows the theme you pick, including an optional frosted-glass look.
-- Live activities beside the notch while it rests: a running timer's countdown, or bars while music plays.
-- The resting notch speaks up for a moment: a timer ending, a meeting a minute away, plugging in or a low battery, and (if you turn it on) volume and brightness. New screenshots drop out of the notch to click or drag, dragging a file opens the Shelf, timer digits flip, the record has a tonearm, and the lock screen can show a large cover. Each has its own switch.
-- Detach the prompter from the notch to use it as a free panel you can drag and resize.
-- A black panel at the notch showing your script, hidden from screen sharing and recording.
-- Voice follow: the script advances as you speak and waits when you stop. Recognition stays on-device where the Mac supports it.
-- Drag the panel anywhere, resize it from its edges, double-click the grip to snap back to the notch.
-- Click any word to jump to it; ⌘←/→ and ⌘↑/↓ step by one or ten words.
-- Thai and mixed Thai/English scripts: Thai is split into words and tracked even though it has no spaces. Language is picked automatically from the script, or set by hand.
-- Import a Markdown or Obsidian note as your script (⌘O); links, tags, callouts and formatting are stripped so only speakable text remains. Reload it after editing the note.
-- A Look tab to restyle everything live: font, weight, size, colours, current-word style, glow, corner radius.
-- Team scripts: start a line with `@Name:` to mark who speaks. Each person picks their name, other people's lines dim, and a "You're next" cue appears before their turn.
-- Rehearsal stats after each run: time, words per minute, where you paused and for how long, time per section, and an approximate filler-word count, with a time limit to rehearse against.
-- Phone remote with no app: scan a QR code and control the prompter from your phone's browser over Wi-Fi.
-- Six built-in themes, plus your own saved as small `.qoltheme` files you can import, export and share.
+<!-- Demo GIF goes here: <p align="center"><img src="Branding/demo.gif" width="720"></p> -->
 
-## Build and run
+"QoL" is short for quality of life: lots of small, useful things, right where you already look.
 
-Requires macOS 14+ and Xcode command line tools.
+## Download
+
+1. Download the `.zip` from the [latest release](https://github.com/u6610909/QoL-notch/releases/latest) and unzip it.
+2. Move **QoL Notch.app** to Applications.
+3. The first time, **right-click the app → Open**. It isn't notarized by Apple yet, so a normal double-click is blocked once.
+
+If macOS still won't open it:
+
+```bash
+xattr -dr com.apple.quarantine "/Applications/QoL Notch.app"
+```
+
+## Teleprompter
+
+- **Voice Follow:** the script moves as you speak and waits when you stop. Recognition stays on your Mac where it's supported.
+- **Auto Scroll:** no mic needed. Pick a speed from 60 to 240 words a minute; it pauses a little at commas, sentence ends and new paragraphs.
+- **Thai first:** Thai and mixed Thai/English scripts are split into words and followed, even though Thai has no spaces.
+- **Hidden from screen sharing:** your script sits at the notch, right under the camera, and doesn't show up in Zoom, Meet or recordings.
+- **Team scripts:** start a line with `@Name:` and each speaker gets a "You're next" cue before their turn.
+- **Rehearse:** after each run you see your time, words per minute, pauses, time per section and filler words.
+- **Phone remote:** scan a QR code and control it from your phone's browser. No app needed.
+- **Import notes:** open a Markdown or Obsidian note (⌘O) and only the speakable text is kept.
+- Click any word to jump to it, or detach the prompter as a free panel you can drag and resize.
+
+## The island
+
+The island rests inside the notch and opens when you point at it. Pick up to six tools to sit beside the notch, in your order:
+
+| Tool | What it does |
+|---|---|
+| **Home** | Music, what's next, weather or system load at a glance |
+| **Now playing** | Works with any app, browser tabs too. Drag the progress bar, skip, shuffle; the cover spins as a vinyl record and colours the glow |
+| **Calendar** | Today and the days ahead |
+| **Camera** | A quick mirror before a call, with a flip button |
+| **Notes** | A quick note, with an optional Touch ID lock |
+| **Timer** | Counts down beside the notch while it rests |
+| **Clipboard** | History that survives restarts, screenshots included |
+| **Shelf** | Drop files on the notch to hold them, then drag them out or AirDrop them |
+| **Apps** | A small launcher |
+
+While it rests, the notch speaks up for a moment when something matters: a timer ending, a meeting a minute away, plugging in, low battery, and (if you want) volume and brightness. New screenshots drop out of the notch so you can drag them straight into a chat.
+
+**Experimental:** music controls on the lock screen. Off by default, because it uses parts of macOS that an update could break.
+
+## Make it yours
+
+Five built-in themes, or build your own: accent colour, glow colour, script font and size. Save themes as small `.qoltheme` files to share with friends.
+
+## Build from source
+
+Requires macOS 14+ and the Xcode command line tools.
 
 ```bash
 ./scripts/bundle.sh
 open "build/QoL Notch.app"
 ```
 
-Run the tests with `swift test`.
+Run the tests with `swift test`. The logo and app icon are drawn from numbers in `scripts/make_logo.py`; run `./scripts/render_logo.sh` after changing them.
 
-The logo, the app icon and the social preview are drawn from numbers in `scripts/make_logo.py`. Run `./scripts/render_logo.sh` after changing them.
+The first time you press Start in Voice Follow, macOS asks for microphone and speech recognition access.
 
-The first time you press Start, macOS asks for microphone and speech recognition access.
+## Contributing
+
+Issues and pull requests are welcome. If QoL Notch is useful to you, a ⭐ helps other people find it.
 
 ## License
 
