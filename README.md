@@ -17,10 +17,8 @@
 </p>
 
 <p align="center">
-  <img src="Branding/social-preview.png" alt="QoL Notch" width="720">
+  <img src="Branding/demo.gif" alt="QoL Notch: the island scrolling a script on its own, then switching to the app launcher" width="720">
 </p>
-
-<!-- Demo GIF goes here: <p align="center"><img src="Branding/demo.gif" width="720"></p> -->
 
 "QoL" is short for quality of life: lots of small, useful things, right where you already look.
 
