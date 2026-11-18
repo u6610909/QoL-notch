@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="962" height="140" viewBox="0 0 962 140">
+  <defs>
+  </defs>
+  <g fill="none" stroke="#0B0C1A" stroke-width="20" stroke-linecap="round" stroke-linejoin="round"><g transform="translate(0,0)"><circle cx="70" cy="70" r="60"/></g><g transform="translate(156,0)"><circle cx="50" cy="90" r="40"/></g><g transform="translate(272,0)"><polyline points="10,10 10,130 80,130"/></g><g transform="translate(418,0)"><polyline points="10,130 10,10 110,130 110,10"/></g><g transform="translate(554,0)"><circle cx="50" cy="90" r="40"/></g><g transform="translate(670,0)"><path d="M30,20 L30,105 A25,25 0 0 0 55,130 L60,130"/><line x1="10" y1="50" x2="60" y2="50"/></g><g transform="translate(756,0)"><path d="M78.28,61.72 A40,40 0 1 0 78.28,118.28"/></g><g transform="translate(862,0)"><line x1="10" y1="10" x2="10" y2="130"/><path d="M10,90 A40,40 0 0 1 90,90 L90,130"/></g><line x1="92" y1="92" x2="126" y2="126" stroke="#E8492F"/></g>
+</svg>

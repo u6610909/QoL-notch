@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1258" height="240" viewBox="0 0 1258 240">
+  <defs>
+    <linearGradient id="hbg" x1="0" y1="100" x2="0" y2="924" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#343A8C"/><stop offset="0.55" stop-color="#1A1C4A"/><stop offset="1" stop-color="#0A0B1E"/>
+    </linearGradient>
+    <radialGradient id="haura">
+      <stop offset="0" stop-color="#A9B4FF" stop-opacity="0.95"/>
+      <stop offset="0.35" stop-color="#5B6CFF" stop-opacity="0.9"/>
+      <stop offset="0.7" stop-color="#4338CA" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#4338CA" stop-opacity="0"/>
+    </radialGradient>
+    <clipPath id="htile"><rect x="100" y="100" width="824" height="824" rx="185" /></clipPath>
+    <clipPath id="hisland"><path d="M172,180 C199.28,180 216,196.72 216,224 L216,510 Q216,620 326,620 L698,620 Q808,620 808,510 L808,224 C808,196.72 824.72,180 852,180 Z"/></clipPath>
+    <filter id="hauraBlur" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="18"/></filter>
+    <filter id="hcoralBlur" x="-30%" y="-100%" width="160%" height="300%"><feGaussianBlur stdDeviation="10"/></filter>
+    <filter id="hshadow" x="-10%" y="-10%" width="120%" height="125%"><feGaussianBlur stdDeviation="12"/></filter>
+  </defs>
+  <g transform="scale(0.29126) translate(-100,-100)">
+  <g clip-path="url(#htile)">
+    <rect x="100" y="100" width="824" height="824" rx="185" fill="url(#hbg)"/>
+    <path d="M100,100 H924 V180 H100 Z M172,180 C199.28,180 216,196.72 216,224 L216,510 Q216,620 326,620 L698,620 Q808,620 808,510 L808,224 C808,196.72 824.72,180 852,180 Z" fill="#000000"/>
+    <g clip-path="url(#hisland)">
+      <ellipse cx="512" cy="628" rx="250" ry="170" fill="url(#haura)" filter="url(#hauraBlur)"/>
+    </g>
+    <rect x="288" y="272" width="136" height="44" rx="22" fill="#FFFFFF" fill-opacity="0.32"/>
+    <rect x="444" y="272" width="188" height="44" rx="22" fill="#FFFFFF" fill-opacity="0.32"/>
+    <rect x="652" y="272" width="84" height="44" rx="22" fill="#FFFFFF" fill-opacity="0.32"/>
+    <rect x="288" y="352" width="100" height="44" rx="22" fill="#FFFFFF"/>
+    <rect x="408" y="352" width="172" height="44" rx="22" fill="#FF6A55" fill-opacity="0.55" filter="url(#hcoralBlur)"/>
+    <rect x="408" y="352" width="172" height="44" rx="22" fill="#FF6A55"/>
+    <rect x="600" y="352" width="136" height="44" rx="22" fill="#FFFFFF" fill-opacity="0.32"/>
+  </g>
+  <rect x="102" y="102" width="820" height="820" rx="183" fill="none" stroke="#FFFFFF" stroke-opacity="0.1" stroke-width="4"/>
+  </g>
+  <g transform="translate(296,50)"><g fill="none" stroke="#FFFFFF" stroke-width="20" stroke-linecap="round" stroke-linejoin="round"><g transform="translate(0,0)"><circle cx="70" cy="70" r="60"/></g><g transform="translate(156,0)"><circle cx="50" cy="90" r="40"/></g><g transform="translate(272,0)"><polyline points="10,10 10,130 80,130"/></g><g transform="translate(418,0)"><polyline points="10,130 10,10 110,130 110,10"/></g><g transform="translate(554,0)"><circle cx="50" cy="90" r="40"/></g><g transform="translate(670,0)"><path d="M30,20 L30,105 A25,25 0 0 0 55,130 L60,130"/><line x1="10" y1="50" x2="60" y2="50"/></g><g transform="translate(756,0)"><path d="M78.28,61.72 A40,40 0 1 0 78.28,118.28"/></g><g transform="translate(862,0)"><line x1="10" y1="10" x2="10" y2="130"/><path d="M10,90 A40,40 0 0 1 90,90 L90,130"/></g><line x1="92" y1="92" x2="126" y2="126" stroke="#FF6A55"/></g></g>
+</svg>
