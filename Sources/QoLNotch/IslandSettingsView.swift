@@ -18,6 +18,8 @@ struct IslandSettingsView: View {
     @AppStorage(IslandFeature.eventPeeks.rawValue) private var eventPeeks = true
     @AppStorage(IslandFeature.batteryPeeks.rawValue) private var batteryPeeks = true
     @AppStorage(IslandFeature.systemHUD.rawValue) private var systemHUD = false
+    @AppStorage(IslandFeature.hideSystemHUD.rawValue) private var hideSystemHUD = true
+    @State private var keysTrusted = MediaKeyTap.isTrusted
     @AppStorage(IslandFeature.tonearm.rawValue) private var tonearm = true
     @AppStorage(IslandFeature.screenshotDrop.rawValue) private var screenshotDrop = true
     @AppStorage(IslandFeature.shelfOnDrag.rawValue) private var shelfOnDrag = true
@@ -97,8 +99,32 @@ struct IslandSettingsView: View {
                 Toggle("Open the Shelf when I drag a file", isOn: $shelfOnDrag)
                     .help("As soon as you start dragging a file anywhere, the notch opens as a place to drop it. Off: it opens only when you drag a file up to the notch.")
                 Toggle("Show volume and brightness in the notch", isOn: $systemHUD)
-                    .help("The notch widens and a bar follows the volume and brightness keys. macOS still shows its own indicator; QoL Notch can't hide it without extra permissions, so it doesn't try. At 0% or 100% a key press may show nothing.")
+                    .help("The notch widens and a bar follows the volume and brightness keys.")
                     .onChange(of: systemHUD) { _, on in on ? SystemHUD.shared.start() : SystemHUD.shared.stop() }
+                if systemHUD {
+                    Toggle("Hide the macOS indicator", isOn: $hideSystemHUD)
+                        .help("QoL Notch handles the volume and brightness keys itself, so macOS doesn't show its own bar on top. Needs the Accessibility permission. Keys it can't handle (like HDMI audio) still go to macOS.")
+                        .onChange(of: hideSystemHUD) { _, _ in SystemHUD.shared.refreshKeyTap() }
+                    if hideSystemHUD && !keysTrusted {
+                        HStack {
+                            Text("Needs Accessibility permission")
+                                .foregroundStyle(.secondary)
+                            Spacer()
+                            Button("Allow…") {
+                                MediaKeyTap.askForPermission()
+                                MediaKeyTap.openAccessibilitySettings()
+                            }
+                        }
+                        .task {
+                            // Notice the moment the permission is granted, and start right away.
+                            while !Task.isCancelled && !MediaKeyTap.isTrusted {
+                                try? await Task.sleep(for: .seconds(1))
+                            }
+                            keysTrusted = MediaKeyTap.isTrusted
+                            SystemHUD.shared.refreshKeyTap()
+                        }
+                    }
+                }
             } header: { Text("Notch events") } footer: {
                 Text("The notch widens for a moment to tell you something, then settles back. It never interrupts while you are reading a script or typing.")
             }

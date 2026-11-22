@@ -7,6 +7,7 @@ enum IslandFeature: String, CaseIterable {
     case batteryPeeks = "batteryPeek"
     case screenshotDrop = "screenshotDrop"
     case systemHUD = "systemHUD"                // opt-in: macOS keeps its own indicator
+    case hideSystemHUD = "hideSystemHUD"        // with systemHUD: take over the keys so macOS draws nothing
     case shelfOnDrag = "shelfOnDrag"
     case tonearm = "vinylTonearm"
     case lockScreenLargeCover = "lockScreenLargeCover"

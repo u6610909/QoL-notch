@@ -683,4 +683,22 @@ final class QoLNotchTests: XCTestCase {
         XCTAssertLessThan(AutoScroller.dwell(on: words[0], next: nil, wordsPerMinute: 200), plain)
         XCTAssertEqual(AutoScroller.dwell(on: words[0], next: nil, wordsPerMinute: 1000), 60 / 240, accuracy: 0.001)
     }
+
+    func testMediaKeysStepLikeMacOS() {
+        XCTAssertEqual(SystemHUD.stepped(0.5, up: true, fine: false), 0.5625, accuracy: 0.0001)
+        XCTAssertEqual(SystemHUD.stepped(0.5, up: false, fine: false), 0.4375, accuracy: 0.0001)
+        XCTAssertEqual(SystemHUD.stepped(0.5, up: true, fine: true), 0.5 + 1.0 / 64, accuracy: 0.0001)
+        XCTAssertEqual(SystemHUD.stepped(1, up: true, fine: false), 1)
+        XCTAssertEqual(SystemHUD.stepped(0.01, up: false, fine: false), 0)
+        // An off-grid level snaps to the grid before stepping, like the system does.
+        XCTAssertEqual(SystemHUD.stepped(0.52, up: true, fine: false), 0.5625, accuracy: 0.0001)
+
+        // data1: key code in the high 16 bits, 0x0A = down / 0x0B = up, bit 0 = repeat.
+        let down = MediaKeyTap.decode(data1: (0 << 16) | (0x0A << 8))
+        XCTAssertEqual(down.code, 0); XCTAssertTrue(down.down); XCTAssertFalse(down.isRepeat)
+        let up = MediaKeyTap.decode(data1: (3 << 16) | (0x0B << 8))
+        XCTAssertEqual(up.code, 3); XCTAssertFalse(up.down)
+        let held = MediaKeyTap.decode(data1: (1 << 16) | (0x0A << 8) | 1)
+        XCTAssertTrue(held.down); XCTAssertTrue(held.isRepeat)
+    }
 }

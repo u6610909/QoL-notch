@@ -1,8 +1,9 @@
 import CoreAudio
 import AppKit
 
-/// Shows volume and brightness changes as a peek. macOS keeps its own indicator: hiding it would need
-/// the Accessibility permission or unloading a system agent, and this does neither.
+/// Shows volume and brightness changes as a peek. With "hide the macOS indicator" on and the Accessibility
+/// permission granted, it also takes over the volume and brightness keys (MediaKeyTap), sets the level
+/// itself and swallows the key, so macOS draws nothing. Without the permission macOS keeps its indicator.
 final class SystemHUD {
     static let shared = SystemHUD()
 
@@ -33,6 +34,7 @@ final class SystemHUD {
 
         lastBrightness = readBrightness()
         schedulePoll(every: 0.4)
+        refreshKeyTap()
         let center = NSWorkspace.shared.notificationCenter
         observers = [
             center.addObserver(forName: NSWorkspace.screensDidSleepNotification, object: nil, queue: .main) { [weak self] _ in
@@ -81,8 +83,93 @@ final class SystemHUD {
         lastBrightness = nil
         if let keyMonitor { NSEvent.removeMonitor(keyMonitor) }
         keyMonitor = nil
+        MediaKeyTap.shared.stop()
+        MediaKeyTap.shared.handler = nil
         observers.forEach { NSWorkspace.shared.notificationCenter.removeObserver($0) }
         observers = []
+    }
+
+    /// Starts or stops taking over the keys to match the setting and the permission. Safe to call any time.
+    func refreshKeyTap() {
+        guard running, IslandFeature.hideSystemHUD.isOn else {
+            MediaKeyTap.shared.stop()
+            MediaKeyTap.shared.handler = nil
+            return
+        }
+        MediaKeyTap.shared.handler = { [weak self] key, fine in self?.handleKey(key, fine: fine) ?? false }
+        if !MediaKeyTap.shared.start() {
+            // Not allowed yet: look again every few seconds, so granting the permission works without a restart.
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
+                guard let self, self.running, !MediaKeyTap.shared.isRunning else { return }
+                self.refreshKeyTap()
+            }
+        }
+    }
+
+    /// One press of a volume key, as macOS does it: 16 steps, or 64 with Option + Shift. Pure, for tests.
+    static func stepped(_ value: Float, up: Bool, fine: Bool) -> Float {
+        let step: Float = fine ? 1 / 64 : 1 / 16
+        let next = ((value / step).rounded() + (up ? 1 : -1)) * step
+        return min(1, max(0, next))
+    }
+
+    /// Acts on a media key. False means "not mine": the key goes on to macOS as usual.
+    private func handleKey(_ key: MediaKeyTap.Key, fine: Bool) -> Bool {
+        switch key {
+        case .soundUp, .soundDown: return stepVolume(up: key == .soundUp, fine: fine)
+        case .mute: return toggleMute()
+        case .brightnessUp, .brightnessDown: return stepBrightness(up: key == .brightnessUp, fine: fine)
+        }
+    }
+
+    private static func settable(_ device: AudioDeviceID, _ address: AudioObjectPropertyAddress) -> Bool {
+        var address = address
+        var ok: DarwinBoolean = false
+        return AudioObjectIsPropertySettable(device, &address, &ok) == noErr && ok.boolValue
+    }
+
+    private static func write<T>(_ device: AudioDeviceID, _ address: AudioObjectPropertyAddress, _ value: T) -> Bool {
+        var address = address
+        var value = value
+        return AudioObjectSetPropertyData(device, &address, 0, nil, UInt32(MemoryLayout<T>.size), &value) == noErr
+    }
+
+    private func stepVolume(up: Bool, fine: Bool) -> Bool {
+        guard let device = Self.defaultOutputDevice() else { return false }
+        let addresses = Self.volumeAddresses(device).filter { Self.settable(device, $0) }
+        guard !addresses.isEmpty, let now = Self.volume(of: device) else { return false }
+        let mute = Self.address(kAudioDevicePropertyMute, kAudioDevicePropertyScopeOutput)
+        if up, Self.isMuted(device), Self.settable(device, mute) { _ = Self.write(device, mute, UInt32(0)) }
+        let next = Self.stepped(now, up: up, fine: fine)
+        for address in addresses { _ = Self.write(device, address, Float32(next)) }
+        DispatchQueue.main.async { self.volumeChanged(force: true) }
+        return true
+    }
+
+    private func toggleMute() -> Bool {
+        guard let device = Self.defaultOutputDevice() else { return false }
+        let mute = Self.address(kAudioDevicePropertyMute, kAudioDevicePropertyScopeOutput)
+        guard Self.settable(device, mute) else { return false }
+        _ = Self.write(device, mute, UInt32(Self.isMuted(device) ? 0 : 1))
+        DispatchQueue.main.async { self.volumeChanged(force: true) }
+        return true
+    }
+
+    private typealias SetBrightness = @convention(c) (CGDirectDisplayID, Float) -> Int32
+
+    private lazy var setBrightness: SetBrightness? = {
+        guard let handle = dlopen("/System/Library/PrivateFrameworks/DisplayServices.framework/DisplayServices", RTLD_NOW),
+              let symbol = dlsym(handle, "DisplayServicesSetBrightness") else { return nil }
+        return unsafeBitCast(symbol, to: SetBrightness.self)
+    }()
+
+    private func stepBrightness(up: Bool, fine: Bool) -> Bool {
+        guard let setBrightness, let display = builtInDisplay(), let now = readBrightness() else { return false }
+        let next = Self.stepped(now, up: up, fine: fine)
+        guard setBrightness(display, next) == 0 else { return false }
+        lastBrightness = next
+        postBrightness(next)
+        return true
     }
 
     /// The glyph for a volume level. Pure, for tests.
